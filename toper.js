@@ -11,5 +11,3 @@ function toper () {
         // htmlRef.appendChild(iframeContainer);
         console.log("Images/Files are fully loaded");
 };
-
-toper();
