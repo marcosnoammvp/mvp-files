@@ -1,0 +1,43 @@
+      #root {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        position: fixed;
+        z-index: 999;
+      }
+      #toperIframeContainer {
+        width: 640px;
+        height: 480px;
+        position: relative;
+      }
+      #toperIframe {
+        width: 100%;
+        height: 100%;
+      }
+      #toperIframeButton {
+        color: white !important;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      @media (max-width: 499px) {
+        #toperIframeContainer {
+          width: 385px;
+          height: 480px;
+        }
+      }
+      @media (min-width: 500px) and (max-width: 1000px) {
+        #toperIframeContainer {
+          width: 580px;
+          height: 480px;
+        }
+      }
+      @media (min-width: 1000px) {
+        #toperIframeContainer {
+          width: 640px;
+          height: 480px;
+        }
+      }
