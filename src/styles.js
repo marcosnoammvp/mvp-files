@@ -1,4 +1,11 @@
-      #root {
+const css = `
+      #topperRoot {
+        all: initial; /* blocking inheritance for all properties */
+      }
+      #topperRoot * {
+        all: unset; /* allowing inheritance within #mydiv */
+      }
+      #topperRoot {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -8,36 +15,46 @@
         position: fixed;
         z-index: 999;
       }
-      #toperIframeContainer {
+      #topperIframeContainer {
         width: 640px;
         height: 480px;
         position: relative;
       }
-      #toperIframe {
+      #topperIframe {
         width: 100%;
         height: 100%;
       }
-      #toperIframeButton {
+
+      #topperCloseButton {
         color: white !important;
         position: absolute;
-        top: 0;
-        right: 0;
+        margin: 8px;
       }
+
+      button#topperCloseButton {
+        font-family: inherit;
+        font-size: 100%;
+        padding: 0;
+        box-shadow: none;
+      }
+
       @media (max-width: 499px) {
-        #toperIframeContainer {
+        #topperIframeContainer {
           width: 385px;
           height: 480px;
         }
       }
       @media (min-width: 500px) and (max-width: 1000px) {
-        #toperIframeContainer {
+        #topperIframeContainer {
           width: 580px;
           height: 480px;
         }
       }
       @media (min-width: 1000px) {
-        #toperIframeContainer {
+        #topperIframeContainer {
           width: 640px;
           height: 480px;
         }
-      }
+      }`;
+
+module.exports = { css };

@@ -1,0 +1,16 @@
+{
+  "collectCoverage": true,
+  "moduleFileExtensions": [
+    "js",
+    "mjs"
+  ],
+  "transform": {
+    "^.+\\.js$": "babel-jest",
+    "^.+\\.mjs$": "babel-jest"
+  },
+ 
+  "testRegex": "((\\.|/*.)(spec))\\.js?$",
+    "setupFiles": [
+      "./__mocks__/client.js"
+    ]
+}
