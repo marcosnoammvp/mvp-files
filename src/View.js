@@ -1,3 +1,5 @@
+const { css } = require("./styles");
+
 export const closeButtonStrategies = new Map([
   [
     "top-right",
@@ -28,69 +30,119 @@ export const closeButtonStrategies = new Map([
     },
   ],
 ]);
+// div #topperRoot
+// -- div #topperIframeContainer
+// ---- button #topperCloseButton
+// ---- iframe #topperIframe
 
+// data = {
+//   component: "Cairo",
+//   params: null,
+//   ui: {
+//     closeButton: {
+//       strategy: "top-left",
+//       color: "white",
+//     },
+//   },
+// };
 export class View {
   constructor(data) {
-    this.root = this.getElement("#root");
+    const { brand, configs } = data;
+    const { component, ui } = configs;
+    const { closeButton } = ui;
+    this.createIframe(component, brand);
+    this.createCloseButton(closeButton);
+    this.createIframeContainer();
+    this.createStyle(css);
+    this.createRoot();
 
-    this.iframeContainer = this.createElement("div");
-    this.setAttributes(this.iframeContainer, { id: "toperIframeContainer" });
-
-    this.iframe = this.createElement("iframe");
-    this.setAttributes(this.iframe, {
-      id: "toperIframe",
-      src: `http://localhost:3000/${data.configs.component}/${data.brand}`,
-    });
-
-    this.closeButton = this.createElement(
-      "button",
-      data.configs.ui.closeButton
-    );
-    closeButtonStrategies.get(data.configs.ui.closeButton.strategy)(
-      this.closeButton
-    );
-
-    this.closeButton.innerHTML = "X";
-
-    this.setAttributes(this.closeButton, { id: "toperIframeButton" });
-
-    this.iframeContainer.appendChild(this.closeButton);
-    this.iframeContainer.appendChild(this.iframe);
-
-    this.root.appendChild(this.iframeContainer);
+    const htmlRef = this.getElementBySelector("html");
+    this.insertAsFirstChild(htmlRef, this.cssTag);
+    this.insertAsFirstChild(htmlRef, this.root);
   }
 
   bindRemoveToper() {
     this.closeButton.addEventListener("click", (event) => {
-      console.log("button clicked");
       this.root.remove();
     });
   }
 
-  // Create an element with an optional CSS class
-  createElement(tag, styles) {
-    const element = document.createElement(tag);
-
-    if (styles) {
-      const styleTupples = Object.entries(styles);
-      styleTupples.forEach((tupple) => {
-        element.style.setProperty(tupple[0], tupple[1], "important");
-      });
-    }
-
+  createElement(tag, options = {}) {
+    const { styles, attributes } = options;
+    const element = new HtmlElement(tag)
+      .whitAttributes(attributes)
+      .whitStyles(styles)
+      .getElement();
     return element;
   }
 
-  // Retrieve an element from the DOM
-  getElement(selector) {
+  getElementBySelector(selector) {
     const element = document.querySelector(selector);
     return element;
   }
 
-  setAttributes(element, attributes) {
-    const attrTuples = Object.entries(attributes);
+  insertAsFirstChild(father, child) {
+    father.insertBefore(child, father.firstChild);
+  }
+
+  createRoot() {
+    this.root = this.createElement("div", {
+      attributes: { id: "topperRoot" },
+    });
+    this.root.appendChild(this.iframeContainer);
+  }
+  createIframeContainer() {
+    this.iframeContainer = this.createElement("div", {
+      attributes: { id: "topperIframeContainer" },
+    });
+    this.iframeContainer.appendChild(this.closeButton);
+    this.iframeContainer.appendChild(this.iframe);
+  }
+  createIframe(component, brand) {
+    this.iframe = this.createElement("iframe", {
+      attributes: {
+        id: "topperIframe",
+        src: `https://mvp-pages.vercel.app/${component}/${brand}`,
+      },
+    });
+  }
+  createCloseButton(closeButton) {
+    const defaultStrategy = "right-left";
+    const { strategy, color } = closeButton;
+    this.closeButton = this.createElement("button", {
+      attributes: { id: "topperCloseButton" },
+      styles: { color },
+    });
+
+    closeButtonStrategies.get(strategy || defaultStrategy)(this.closeButton);
+
+    this.closeButton.innerHTML = "X";
+  }
+  createStyle(css) {
+    this.cssTag = this.createElement("style");
+    this.cssTag.innerHTML = css;
+  }
+}
+
+export class HtmlElement {
+  constructor(tag) {
+    this.element = document.createElement(tag);
+  }
+  whitStyles(styles = {}) {
+    const styleTupples = Object.entries(styles);
+    styleTupples.forEach((tupple) => {
+      this.element.style.setProperty(tupple[0], tupple[1], "important");
+    });
+    return this;
+  }
+  whitAttributes(attributes = {}) {
+    const attrTuples = Object.entries(attributes) || [];
     for (let i = 0; i < attrTuples.length; i++) {
-      element.setAttribute(attrTuples[i][0], attrTuples[i][1]);
+      this.element.setAttribute(attrTuples[i][0], attrTuples[i][1]);
     }
+    return this;
+  }
+  getElement() {
+    return this.element;
   }
 }

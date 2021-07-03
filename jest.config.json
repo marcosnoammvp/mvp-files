@@ -9,5 +9,8 @@
     "^.+\\.mjs$": "babel-jest"
   },
  
-  "testRegex": "((\\.|/*.)(spec))\\.js?$"
+  "testRegex": "((\\.|/*.)(spec))\\.js?$",
+    "setupFiles": [
+      "./__mocks__/client.js"
+    ]
 }

@@ -2,16 +2,10 @@ import { createAsyncModel } from "./Model";
 import { View } from "./View";
 import { Controller } from "./Controller";
 
-export function createAppRoot() {
-  const root = document.createElement("div");
-  root.setAttribute("id", "root");
-  const htmlRef = document.querySelector("html");
-  htmlRef.insertBefore(root, htmlRef.firstChild);
-}
-
-export async function initTopper(brand) {
-  createAppRoot();
+export async function initTopper(brand = "no-brand") {
   const model = await createAsyncModel(brand);
-  const view = new View(model.getConfigs());
-  const app = new Controller(model, view);
+  if (model.brand !== "no-brand") {
+    const view = new View(model.getModelData());
+    const app = new Controller(model, view);
+  }
 }

@@ -1,73 +1,114 @@
 import "regenerator-runtime/runtime.js";
-var sinon = require("sinon");
+/*
+-Model constructor
+-Model getConfigs
+-Model initialize
+*/
 
 const { Model, createAsyncModel } = require("../src/Model");
+const utils = require("../src/utils");
+
+const defaultBrand = "no-brand";
+const someBrand = "pepsi";
+const serverSideResponse = {
+  component: "Cairo",
+  params: null,
+  ui: {
+    closeButton: {
+      strategy: "top-left",
+      color: "white",
+    },
+  },
+};
+const serverSideError = {
+  status: 500,
+  message: "Something was wrong",
+};
 describe("Model class", function () {
-  describe("Creating a new instance", function () {
-    it("When correct parameters are providen,then the instance is created", () => {
-      //Arrange
-      const brand = "coca-cola";
-      const model = new Model(brand);
+  describe("constructor()", function () {
+    it("When correct parameters are providen, then the instance is created", () => {
+      const model = new Model(someBrand);
 
-      //Act
-
-      //Assert
-      expect(model.brand).toBe(brand);
-      //** some logic**/
+      expect(model.brand).toStrictEqual(someBrand);
     });
-    it("When no parameters are providen,then the instance is created whit default constructor", () => {
-      //Arrange
+    it("When no parameters are providen,then the instance is created whit default brand", () => {
       const model = new Model();
 
-      //Act
-
-      //Assert
-      expect(model.brand).toBe("no-brand");
-      //** some logic**/
+      expect(model.brand).toBe(defaultBrand);
     });
   });
-  describe("Initializing a new instance", function () {
-    it("When instance is not tinitialized ,then getConfigs()return just constructor values", () => {
-      //Arrange
-      const brand = "coca-cola";
-      const model = new Model(brand);
-
-      //Act
-
-      //Assert
-      expect(model.getConfigs().brand).toBe(brand);
-      expect(model.getConfigs().configs).toBeUndefined();
-      //** some logic**/
+  describe("getModelData()", function () {
+    afterEach(() => {
+      jest.clearAllMocks();
     });
-    it("When instance is initialized ,then getConfigs() return async values", async () => {
-      //Arrange
-      const brand = "coca-cola";
-      const model = new Model(brand);
-      //Act
+    it("When instance is created but not initialized ,then returns just providen values", () => {
+      const model = new Model(someBrand);
+
+      expect(model.getModelData().brand).toBe(someBrand);
+      expect(model.getModelData().configs).toBeUndefined();
+    });
+    it("When instance is created and initialized ,then returns server side values", async () => {
+      const model = new Model(someBrand);
+      jest
+        .spyOn(utils, "getConfigsMock")
+        .mockReturnValue(Promise.resolve(serverSideResponse));
+
       await model.initialize();
-      //Assert
-      expect(model.getConfigs().brand).toBe(brand);
-      expect(model.getConfigs().configs).toBeTruthy();
+
+      expect(model.getModelData()).toEqual({
+        brand: someBrand,
+        configs: { ...serverSideResponse },
+      });
     });
   });
-  describe("Initializing async Model", function () {
-    it("When async model is created whit parameter ,then the model is correctly created", async () => {
-      //Arrange
-      const brand = "coca-cola";
-      const asyncModel = await createAsyncModel(brand);
-      //Act
-      //Assert
-      expect(asyncModel.getConfigs().brand).toBe(brand);
-      expect(asyncModel.getConfigs().configs).toBeTruthy();
+  describe("initialize()", function () {
+    afterEach(() => {
+      jest.clearAllMocks();
     });
-    it("When async model is created whit-out parameter ,then the model is correctly created", async () => {
-      //Arrange
-      const defaultBrand = "no-brand";
-      const asyncModel = await createAsyncModel();
-      //Act
-      //Assert
-      expect(asyncModel.getConfigs().brand).toBe(defaultBrand);
-      expect(asyncModel.getConfigs().configs).toStrictEqual({});
+    it("When model is initialized correctly ,then the model is correctly created", async () => {
+      const model = new Model(someBrand);
+      jest
+        .spyOn(utils, "getConfigsMock")
+        .mockReturnValue(Promise.resolve(serverSideResponse));
+
+      await model.initialize();
+
+      expect(model).toBeTruthy();
     });
+    it("When model is not initialized correctly ,then the model is not created", async () => {
+      const model = new Model(someBrand);
+      jest
+        .spyOn(utils, "getConfigsMock")
+        .mockReturnValue(Promise.reject(serverSideError));
+
+      await model.initialize();
+
+      expect(model.brand).toBe(defaultBrand);
+    });
+  });
+});
+
+describe("createAsyncModel()", function () {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it("When the data is succesfuly fetched ,then the model is correctly created", async () => {
+    jest
+      .spyOn(utils, "getConfigsMock")
+      .mockReturnValue(Promise.resolve(serverSideResponse));
+
+    const model = await createAsyncModel(someBrand);
+
+    expect(model instanceof Model).toBe(true);
+    expect(model).toBeTruthy();
+  });
+  it("When something goes wrong ,then the model is not created", async () => {
+    jest
+      .spyOn(utils, "getConfigsMock")
+      .mockReturnValue(Promise.reject(serverSideError));
+
+    const model = await createAsyncModel(someBrand);
+
+    expect(model.brand).toStrictEqual(defaultBrand);
   });
 });
