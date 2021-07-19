@@ -1,2 +1,2 @@
-import { initTopper } from "./app";
-window["topper"] = initTopper;
+import { App } from "./app";
+window["topper"] = App;

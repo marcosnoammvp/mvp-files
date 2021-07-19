@@ -1,4 +1,4 @@
-const css = `
+const cssString = `
       #topperRoot {
         all: initial; /* blocking inheritance for all properties */
       }
@@ -14,6 +14,7 @@ const css = `
         background: rgba(0, 0, 0, 0.5);
         position: fixed;
         z-index: 999;
+        font-size: 16px;
       }
       #topperIframeContainer {
         width: 640px;
@@ -26,17 +27,18 @@ const css = `
       }
 
       #topperCloseButton {
-        color: white !important;
+        color: white;
         position: absolute;
         margin: 8px;
+        cursor: pointer;
+        transition: font-size 1s;
       }
 
-      button#topperCloseButton {
-        font-family: inherit;
-        font-size: 100%;
-        padding: 0;
-        box-shadow: none;
+      #topperCloseButton:hover{
+        font-weight: normal;
+        font-size: 1.1rem;
       }
+
 
       @media (max-width: 499px) {
         #topperIframeContainer {
@@ -57,4 +59,4 @@ const css = `
         }
       }`;
 
-module.exports = { css };
+module.exports = { cssString };

@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3002;
 app.use(express.static("public"));
 
 // sendFile will go here
-app.get("*", function (req, res) {
+app.get("/topper.js", function (req, res) {
   res.sendFile(path.join(__dirname, "public/bundle.js"));
 });
 

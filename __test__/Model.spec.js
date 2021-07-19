@@ -20,6 +20,7 @@ const serverSideResponse = {
     },
   },
 };
+
 const serverSideError = {
   status: 500,
   message: "Something was wrong",
