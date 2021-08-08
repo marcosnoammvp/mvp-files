@@ -1,4 +1,4 @@
-const { cssString } = require("./styles");
+const { cssDeclarationAsString } = require("./libs");
 const { createHTMLElement } = require("./libs");
 
 export const closeButtonStrategies = new Map([
@@ -17,10 +17,10 @@ export const closeButtonStrategies = new Map([
     },
   ],
   [
-    "bottom-rigth",
+    "bottom-right",
     function (button) {
       button.style.bottom = 0;
-      button.style.rigth = 0;
+      button.style.right = 0;
     },
   ],
   [
@@ -31,6 +31,11 @@ export const closeButtonStrategies = new Map([
     },
   ],
 ]);
+export const  closeButtonStrategiesProxy = new Proxy(closeButtonStrategies, {
+    get: function(target, strategy) {
+        return target.has(strategy) ? target.get(strategy) : target.get('top-right');
+    },
+});
 
 export function View(data) {
   const { brand, configs } = data;
@@ -42,15 +47,15 @@ export function View(data) {
   this.iframeContainer = this.createIframeContainer(this.closeButton, this.iframe);
   this.root = this.createRoot(this.iframeContainer);
 
-  this.styleTag = this.createStyle(cssString);
+  this.styleTag = this.createStyle(cssDeclarationAsString);
 
   const htmlRef = this.getElementBySelector("html");
   this.insertAsFirstChild(htmlRef, this.styleTag);
   this.insertAsFirstChild(htmlRef, this.root);
 }
 
-View.prototype.createCloseButton = function createCloseButton(closeButton) {
-  const defaultStrategy = "right-left";
+View.prototype.createCloseButton = function (closeButton) {  
+  const defaultStrategy = "top-right";
   const { strategy, color } = closeButton;
 
   const element = createHTMLElement("button", {
@@ -58,18 +63,18 @@ View.prototype.createCloseButton = function createCloseButton(closeButton) {
     styles: { color },
   });
 
-  closeButtonStrategies.get(strategy || defaultStrategy)(element);
+  closeButtonStrategiesProxy[strategy](element);
 
   element.innerHTML = "X";
 
   return element;
 };
-View.prototype.createStyle = function createStyle(css) {
+View.prototype.createStyle = function (cssDeclarationAsString) {
   const element = createHTMLElement("style");
-  element.innerHTML = css;
+  element.innerHTML = cssDeclarationAsString;
   return element;
 };
-View.prototype.getElementBySelector = function getElementBySelector(selector) {
+View.prototype.getElementBySelector = function (selector) {
   const element = document.querySelector(selector);
   return element;
 };

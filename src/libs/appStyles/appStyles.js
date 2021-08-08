@@ -1,4 +1,6 @@
-const cssString = `
+const { mediaQueries } = require('./mediaQueries.js');
+
+const cssDeclarationAsString = `
       #topperRoot {
         all: initial; /* blocking inheritance for all properties */
       }
@@ -17,8 +19,6 @@ const cssString = `
         font-size: 16px;
       }
       #topperIframeContainer {
-        width: 640px;
-        height: 480px;
         position: relative;
       }
       #topperIframe {
@@ -38,25 +38,23 @@ const cssString = `
         font-weight: normal;
         font-size: 1.1rem;
       }
-
-
-      @media (max-width: 499px) {
+      @media ${mediaQueries.s} {
         #topperIframeContainer {
           width: 385px;
           height: 480px;
         }
       }
-      @media (min-width: 500px) and (max-width: 1000px) {
-        #topperIframeContainer {
+      @media ${mediaQueries.m}  {
+        #topperIframeContainer  {
           width: 580px;
           height: 480px;
         }
       }
-      @media (min-width: 1000px) {
+      @media ${mediaQueries.l} {
         #topperIframeContainer {
           width: 640px;
           height: 480px;
         }
       }`;
 
-module.exports = { cssString };
+module.exports = { cssDeclarationAsString };

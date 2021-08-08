@@ -1,4 +1,4 @@
-import { HTMLElement,createHTMLElement } from "./HTMLElement";
+import { HTMLElement, createHTMLElement } from "./HTMLElement/";
+import { cssDeclarationAsString } from "./appStyles";
 
-
-export {HTMLElement,createHTMLElement}
+export { HTMLElement, createHTMLElement, cssDeclarationAsString };
