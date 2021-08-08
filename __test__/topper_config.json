@@ -1,0 +1,10 @@
+{
+  "component": "Cairo",
+  "params": null,
+  "ui": {
+    "closeButton": {
+      "strategy": "top-left",
+      "color": "white"
+    }
+  }
+}

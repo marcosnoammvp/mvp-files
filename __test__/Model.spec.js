@@ -1,29 +1,10 @@
 import "regenerator-runtime/runtime.js";
-/*
--Model constructor
--Model getConfigs
--Model initialize
-*/
 
-const { Model, createAsyncModel } = require("../src/Model");
-const utils = require("../src/utils");
+import {serverSideError,serverSideResponse,someBrand,defaultBrand} from './shared';
+import { Model, createAsyncModel } from "../src/Model";
+import * as utils from '../src/utils';
 
-const defaultBrand = "no-brand";
-const someBrand = "pepsi";
-const serverSideResponse = {
-  component: "Cairo",
-  params: null,
-  ui: {
-    closeButton: {
-      strategy: "top-left",
-      color: "white",
-    },
-  },
-};
-const serverSideError = {
-  status: 500,
-  message: "Something was wrong",
-};
+
 describe("Model class", function () {
   describe("constructor()", function () {
     it("When correct parameters are providen, then the instance is created", () => {

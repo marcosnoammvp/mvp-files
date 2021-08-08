@@ -1,4 +1,6 @@
-const css = `
+const { mediaQueries } = require('./mediaQueries.js');
+
+const cssDeclarationAsString = `
       #topperRoot {
         all: initial; /* blocking inheritance for all properties */
       }
@@ -14,10 +16,9 @@ const css = `
         background: rgba(0, 0, 0, 0.5);
         position: fixed;
         z-index: 999;
+        font-size: 16px;
       }
       #topperIframeContainer {
-        width: 640px;
-        height: 480px;
         position: relative;
       }
       #topperIframe {
@@ -26,35 +27,34 @@ const css = `
       }
 
       #topperCloseButton {
-        color: white !important;
+        color: white;
         position: absolute;
         margin: 8px;
+        cursor: pointer;
+        transition: font-size 1s;
       }
 
-      button#topperCloseButton {
-        font-family: inherit;
-        font-size: 100%;
-        padding: 0;
-        box-shadow: none;
+      #topperCloseButton:hover{
+        font-weight: normal;
+        font-size: 1.1rem;
       }
-
-      @media (max-width: 499px) {
+      @media ${mediaQueries.s} {
         #topperIframeContainer {
           width: 385px;
           height: 480px;
         }
       }
-      @media (min-width: 500px) and (max-width: 1000px) {
-        #topperIframeContainer {
+      @media ${mediaQueries.m}  {
+        #topperIframeContainer  {
           width: 580px;
           height: 480px;
         }
       }
-      @media (min-width: 1000px) {
+      @media ${mediaQueries.l} {
         #topperIframeContainer {
           width: 640px;
           height: 480px;
         }
       }`;
 
-module.exports = { css };
+module.exports = { cssDeclarationAsString };

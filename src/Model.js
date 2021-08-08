@@ -1,41 +1,13 @@
 import { getConfigsMock } from "./utils";
 
-/**
- * @typedef ModelData
- * @property {string} brand - an UUID.
- * @property {object} configs - configs for UI.
- */
-
-/**
- * Manages the data of an application.
- * @class
- */
-export class Model {
-  /**
-   * @typedef ModelData
-   * @property {string} brand - an UUID.
-   * @property {object} configs - configs for UI.
-   */
-
-  /**
-   * @param {string} brand - an UUID.
-   */
-  constructor(brand = "no-brand") {
-    this.brand = brand;
-  }
-
-  /**
-   * @returns {ModelData} data required for UI.
-   */
-  getModelData() {
+export function Model (brand = "no-brand") {
+  this.brand = brand;
+}
+Model.prototype.getModelData = function () {
     const data = { brand: this.brand, configs: this.configs };
     return data;
   }
-
-  /**
-   * @desc Initialize the model fetching data from server.
-   */
-  async initialize() {
+Model.prototype.initialize = async function () {
     try {
       const configs = await getConfigsMock(true, 250);
       this.configs = configs;
@@ -43,12 +15,7 @@ export class Model {
       this.brand = "no-brand";
     }
   }
-}
-
-/**
- * @param {string} brand - an UUID.
- * @desc API for creting model fetching data from server
- */
+  
 export async function createAsyncModel(brand) {
   const model = new Model(brand);
   await model.initialize();
