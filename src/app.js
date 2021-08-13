@@ -4,9 +4,9 @@ import { Controller } from "./Controller";
 
 export async function App(brand = "no-brand") {
   try {
-    const model = await createAsyncModel(brand);
-    const view = new View(model.getModelData());
-    const app = new Controller(model, view);
+    var model = await createAsyncModel(brand);
+    var view = new View(model.getModelData());
+    var app = new Controller(model, view);
   } catch (error) {
     if(error instanceof ModelError){
 
